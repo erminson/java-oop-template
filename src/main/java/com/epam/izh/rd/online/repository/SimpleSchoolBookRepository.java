@@ -50,26 +50,22 @@ public class SimpleSchoolBookRepository implements BookRepository<SchoolBook> {
 
     @Override
     public boolean removeByName(String name) {
-        SchoolBook[] newSchoolBooks = new SchoolBook[0];
-        boolean isRemoved = false;
+        int numberOfBooksFound = countBooksByName(name);
+        if (numberOfBooksFound == 0) {
+            return false;
+        }
 
-        for (int i = 0; i < schoolBooks.length; i++) {
+        final SchoolBook[] newSchoolBooks = new SchoolBook[schoolBooks.length - numberOfBooksFound];
+        for (int i = 0, j = 0; i < schoolBooks.length; i++) {
             final SchoolBook currentBook = schoolBooks[i];
             final String currentName = currentBook.getName();
-            if (currentName.equals(name)) {
-                isRemoved = true;
-            } else {
-                final int originSize = newSchoolBooks.length;
-                newSchoolBooks = Arrays.copyOf(newSchoolBooks, originSize + 1);
-                newSchoolBooks[originSize] = currentBook;
+            if (!currentName.equals(name)) {
+                newSchoolBooks[j++] = currentBook;
             }
         }
+        schoolBooks = newSchoolBooks;
 
-        if (isRemoved) {
-            schoolBooks = newSchoolBooks;
-        }
-
-        return isRemoved;
+        return true;
     }
 
     @Override
