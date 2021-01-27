@@ -20,19 +20,32 @@ public class SimpleSchoolBookRepository implements BookRepository<SchoolBook> {
         return true;
     }
 
-    @Override
-    public SchoolBook[] findByName(String name) {
-        SchoolBook[] findedBooks = new SchoolBook[0];
+    private int countBooksByName(String name) {
+        int numberOfBooksFound = 0;
         for (int i = 0; i < schoolBooks.length; i++) {
             final SchoolBook currentBook = schoolBooks[i];
-            if (currentBook.getName().equals(name)) {
-                int originSize = findedBooks.length;
-                findedBooks = Arrays.copyOf(findedBooks, originSize + 1);
-                findedBooks[originSize] = currentBook;
+            final String currentName = currentBook.getName();
+            if (currentName.equals(name)) {
+                numberOfBooksFound++;
             }
         }
 
-        return findedBooks;
+        return numberOfBooksFound;
+    }
+
+    @Override
+    public SchoolBook[] findByName(String name) {
+        int numberOfBooksFound = countBooksByName(name);
+        SchoolBook[] foundedBooks = new SchoolBook[numberOfBooksFound];
+        for (int i = 0; i < schoolBooks.length; i++) {
+            final SchoolBook currentBook = schoolBooks[i];
+            final String currentName = currentBook.getName();
+            if (currentName.equals(name)) {
+                foundedBooks[i] = currentBook;
+            }
+        }
+
+        return foundedBooks;
     }
 
     @Override
