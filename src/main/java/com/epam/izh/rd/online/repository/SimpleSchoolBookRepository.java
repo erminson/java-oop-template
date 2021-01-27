@@ -43,9 +43,10 @@ public class SimpleSchoolBookRepository implements BookRepository<SchoolBook> {
         for (int i = 0; i < schoolBooks.length; i++) {
             final SchoolBook currentBook = schoolBooks[i];
             final String currentName = currentBook.getName();
-            if (!currentName.equals(name)) {
+            if (currentName.equals(name)) {
                 isRemoved = true;
-                int originSize = newSchoolBooks.length;
+            } else {
+                final int originSize = newSchoolBooks.length;
                 newSchoolBooks = Arrays.copyOf(newSchoolBooks, originSize + 1);
                 newSchoolBooks[originSize] = currentBook;
             }
