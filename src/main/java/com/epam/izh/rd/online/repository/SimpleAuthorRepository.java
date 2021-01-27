@@ -9,19 +9,14 @@ public class SimpleAuthorRepository implements AuthorRepository {
 
     @Override
     public boolean save(Author author) {
-        int oldSize = authors.length;
-        Author[] newAuthors = new Author[oldSize + 1];
-
-        for(int i = 0; i < oldSize; i++) {
-            final Author currentAuthor = authors[i];
-            if (currentAuthor.equals(author)) {
-                return false;
-            }
-            newAuthors[i] = currentAuthor;
+        final Author foundAuthor = findByFullName(author.getName(), author.getLastName());
+        if (foundAuthor != null) {
+            return false;
         }
 
-        newAuthors[oldSize] = author;
-        authors = newAuthors;
+        final int originSize = authors.length;
+        authors = Arrays.copyOf(authors, originSize + 1);
+        authors[originSize] = author;
 
         return true;
     }
