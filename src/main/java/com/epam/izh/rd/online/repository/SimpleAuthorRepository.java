@@ -37,23 +37,17 @@ public class SimpleAuthorRepository implements AuthorRepository {
 
     @Override
     public boolean remove(Author author) {
-        int findIndex = -1;
-        int originSize = authors.length;
-        for (int i = 0; i < originSize; i++) {
-            if (authors[i].equals(author)) {
-                findIndex = i;
-                break;
-            }
-        }
-
-        if (findIndex == -1) {
+        final Author foundAuthor = findByFullName(author.getName(), author.getLastName());
+        if (foundAuthor == null) {
             return false;
         }
 
+        int originSize = authors.length;
         Author[] newAuthors = new Author[originSize - 1];
         for (int i = 0, j = 0; i < originSize; i++) {
-            if (i != findIndex) {
-                newAuthors[j++] = authors[i];
+            final Author currentAuthor = authors[i];
+            if (!currentAuthor.equals(author)) {
+                newAuthors[j++] = currentAuthor;
             }
         }
         authors = newAuthors;
